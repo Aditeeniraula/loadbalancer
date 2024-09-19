@@ -1,24 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import Sidebar from "./Sidebar";
+import { Server, ServerStatus } from "../@types/server.types";
 
-interface Server {
-  id: number;
-  name: string;
-  status: "active" | "inactive";
+interface ServerProps {
+  servers: Server[];
+  setServers: React.Dispatch<React.SetStateAction<Server[]>>;
 }
 
-const Servers: React.FC = () => {
-  const [servers, setServers] = useState<Server[]>([
-    { id: 1, name: "Server 1", status: "active" },
-    { id: 2, name: "Server 2", status: "inactive" },
-    { id: 3, name: "Server 3", status: "active" },
-  ]);
-
+const Servers: React.FC<ServerProps> = ({ servers, setServers }) => {
   const addServer = () => {
     const newServer: Server = {
       id: servers.length + 1,
       name: `Server ${servers.length + 1}`,
-      status: "inactive",
+      status: ServerStatus.inactive,
     };
     setServers([...servers, newServer]);
   };
@@ -29,11 +23,12 @@ const Servers: React.FC = () => {
 
   const toggleStatus = (id: number) => {
     setServers(
-      servers.map((server) =>
+      Object(servers).map((server: Server) =>
         server.id === id
           ? {
               ...server,
-              status: server.status === "active" ? "inactive" : "active",
+              status:
+                server.status === ServerStatus.inactive ? "Inactive" : "Active",
             }
           : server
       )
@@ -41,66 +36,72 @@ const Servers: React.FC = () => {
   };
 
   return (
-    <Sidebar>
-      <header className="bg-white shadow-md p-4">
-        <h1 className="text-3xl font-semibold">Servers</h1>
-      </header>
+    <div className="min-h-screen flex">
+      <Sidebar />
 
-      <main className="mt-6">
-        <button
-          onClick={addServer}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mb-4"
-        >
-          Add Server
-        </button>
+      <div className="flex-1 ml-64 bg-gray-100">
+        <header className="bg-white shadow-md p-4">
+          <h1 className="text-3xl font-semibold">Servers</h1>
+        </header>
 
-        <table className="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead>
-            <tr>
-              <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Server Name</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {servers.map((server) => (
-              <tr key={server.id}>
-                <td className="border px-4 py-2">{server.id}</td>
-                <td className="border px-4 py-2">{server.name}</td>
-                <td className="border px-4 py-2">
-                  <span
-                    className={`px-2 py-1 rounded-lg ${
-                      server.status === "active" ? "bg-green-500" : "bg-red-500"
-                    } text-white`}
-                  >
-                    {server.status}
-                  </span>
-                </td>
-                <td className="border px-4 py-2">
-                  <button
-                    onClick={() => toggleStatus(server.id)}
-                    className={`px-4 py-2 rounded-lg ${
-                      server.status === "active"
-                        ? "bg-yellow-500"
-                        : "bg-green-500"
-                    } text-white mr-2`}
-                  >
-                    {server.status === "active" ? "Deactivate" : "Activate"}
-                  </button>
-                  <button
-                    onClick={() => removeServer(server.id)}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                  >
-                    Remove
-                  </button>
-                </td>
+        <main className="p-6">
+          <button
+            onClick={addServer}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mb-4"
+          >
+            Add Server
+          </button>
+
+          <table className="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">ID</th>
+                <th className="px-4 py-2">Server Name</th>
+                <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
-    </Sidebar>
+            </thead>
+            <tbody>
+              {servers.map((server) => (
+                <tr key={server.id}>
+                  <td className="border px-4 py-2">{server.id}</td>
+                  <td className="border px-4 py-2">{server.name}</td>
+                  <td className="border px-4 py-2">
+                    <span
+                      className={`px-2 py-1 rounded-lg ${
+                        server.status === "active"
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      } text-white`}
+                    >
+                      {server.status}
+                    </span>
+                  </td>
+                  <td className="border px-4 py-2">
+                    <button
+                      onClick={() => toggleStatus(server.id)}
+                      className={`px-4 py-2 rounded-lg ${
+                        server.status === "active"
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
+                      } text-white mr-2`}
+                    >
+                      {server.status === "active" ? "Deactivate" : "Activate"}
+                    </button>
+                    <button
+                      onClick={() => removeServer(server.id)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </main>
+      </div>
+    </div>
   );
 };
 
