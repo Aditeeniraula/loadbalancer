@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegistrationForm: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -8,7 +8,6 @@ const RegistrationForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,7 +30,7 @@ const RegistrationForm: React.FC = () => {
         navigate("/login");
       }
     } catch (error) {
-      setErrorMessage("Registration failed. Please try again.");
+      setErrorMessage("Registration failed. User might already exist.");
     }
   };
 
@@ -97,9 +96,11 @@ const RegistrationForm: React.FC = () => {
         >
           Register
         </button>
-
         <p className="mt-4 text-center">
-          Already have an account? <a href="/login">Login here</a>.
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
         </p>
       </form>
     </div>

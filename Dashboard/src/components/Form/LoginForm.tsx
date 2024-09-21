@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
-interface LoginFormProps {
-  onSubmit: (usernameOrEmail: string, password: string) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+const LoginForm: React.FC = () => {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -17,13 +13,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
 
     try {
       const response = await axios.post("http://localhost:8080/login", {
-        username: usernameOrEmail,
+        username,
         password,
       });
 
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      navigate("/dashboard");
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        navigate("/dashboard");
+      }
     } catch (error) {
       setErrorMessage("Invalid credentials. Please try again.");
     }
@@ -42,11 +40,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         )}
 
         <div className="mb-4">
-          <label className="block text-gray-700">Username or Email</label>
+          <label className="block text-gray-700">Username</label>
           <input
             type="text"
-            value={usernameOrEmail}
-            onChange={(e) => setUsernameOrEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full p-2 border rounded"
             required
           />
@@ -69,9 +67,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         >
           Login
         </button>
-
         <p className="mt-4 text-center">
-          Don't have an account? <a href="/register">Register here</a>.
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-500 hover:underline">
+            Register
+          </Link>
         </p>
       </form>
     </div>
