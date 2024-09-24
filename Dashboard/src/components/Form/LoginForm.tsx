@@ -1,79 +1,80 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        username,
-        password,
+      const response = await fetch("http://localhost:8080/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
       });
 
-      if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        navigate("/dashboard");
+      if (response.ok) {
+        toast.success("Login successful!");
+        setTimeout(() => navigate("/dashboard"), 2000);
+      } else {
+        toast.error("Invalid credentials");
       }
     } catch (error) {
-      setErrorMessage("Invalid credentials. Please try again.");
+      toast.error("Error logging in: " + error.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <form
-        className="bg-white p-6 rounded-lg shadow-md w-96"
-        onSubmit={handleSubmit}
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-
-        {errorMessage && (
-          <div className="text-red-500 mb-4 text-center">{errorMessage}</div>
-        )}
-
-        <div className="mb-4">
-          <label className="block text-gray-700">Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
-        >
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-purple-500 to-indigo-600">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center mb-6 text-indigo-700">
           Login
-        </button>
-        <p className="mt-4 text-center">
+        </h2>
+        <Toaster />
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full p-2 border rounded mt-2"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-2 border rounded mt-2"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700"
+          >
+            Login
+          </button>
+        </form>
+        <p className="text-center text-gray-600 mt-4">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline">
-            Register
-          </Link>
+          <a href="/register" className="text-indigo-600 hover:underline">
+            Register here
+          </a>
         </p>
-      </form>
+      </div>
     </div>
   );
 };
