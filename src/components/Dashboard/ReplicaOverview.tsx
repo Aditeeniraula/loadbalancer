@@ -1,50 +1,109 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import ActivityLog from "./ActivityLog";
+interface Replica {
+  name: string;
+  successful_requests: number;
+  failed_requests: number;
+}
 
-const ReplicaOverview = () => {
-  const activityLog = [
-    { text: "Replica 4 was added", color: "bg-blue-500" },
-    { text: "Replica 4 passed health check", color: "bg-yellow-500" },
-    { text: "Replica 3 was not added", color: "bg-red-500" },
-    { text: "Replica 5 was  added", color: "bg-blue-500" },
-    { text: "Replica 6 was  added", color: "bg-blue-500" },
-  ];
+const ReplicaOverview: React.FC = () => {
+  const [replicaData, setReplicaData] = useState<Replica[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchReplicaData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/admin/get-statistics"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch replica data");
+        }
+        const data = await response.json();
+
+        if (data.success) {
+          setReplicaData(data.data);
+        } else {
+          setError("Failed to fetch replica data");
+        }
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReplicaData();
+  }, []);
+
+  const availableReplicas = replicaData.filter(
+    (replica) => replica.failed_requests === 0
+  ).length;
+
+  const unavailableReplicas = replicaData.filter(
+    (replica) => replica.failed_requests > 0
+  ).length;
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="flex flex-col space-y-6">
-      <div className="flex-1 bg-white shadow-md rounded-lg p-4">
+      <div className="bg-white shadow-md rounded-lg p-4 max-w-4xl mx-auto">
         <h2 className="text-lg font-semibold mb-4">Replica Overview</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="text-center">
             <h3 className="text-sm font-medium text-gray-700">
               Available Replica
             </h3>
-            <p className="text-2xl font-bold text-green-500">4</p>
+            <p className="text-2xl font-bold text-green-500">
+              {availableReplicas}
+            </p>
           </div>
           <div className="text-center">
             <h3 className="text-sm font-medium text-gray-700">
               Unavailable Replica
             </h3>
-            <p className="text-2xl font-bold text-red-500">1</p>
+            <p className="text-2xl font-bold text-red-500">
+              {unavailableReplicas}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="flex items-center bg-blue-50 border border-blue-200 rounded-lg p-4 max-h-32 overflow-hidden">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 flex items-center justify-center bg-blue-500 rounded-full">
+                <span className="font-bold text-lg text-white">✔</span>
+              </div>
+              <div>
+                <h3 className="text-xs font-medium text-gray-700">HTTP/SSL</h3>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-h-32 overflow-hidden">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 flex items-center justify-center bg-yellow-500 rounded-full">
+                <span className="text-white font-bold text-lg">−</span>
+              </div>
+              <div>
+                <h3 className="text-xs font-medium text-gray-700">
+                  Rate Limit
+                </h3>
+                <p className="text-sm font-semibold text-yellow-500">100</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div className="flex-1 bg-white shadow-md rounded-lg p-4 h-64 overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Activity Log</h2>
-        <ul className="space-y-2">
-          {activityLog.map((log, index) => (
-            <li
-              key={index}
-              className="flex items-center justify-between border p-2 rounded-lg"
-            >
-              <div className="flex items-center gap-2">
-                <span className={`w-4 h-4 rounded-full ${log.color}`}></span>
-                <p className="text-sm font-medium text-gray-700">{log.text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ActivityLog />
     </div>
   );
 };
