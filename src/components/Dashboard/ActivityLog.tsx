@@ -1,39 +1,3 @@
-/*import React from "react";
-
-// Define the type for a single activity log item
-interface ActivityLogItem {
-  text: string;
-  color: string;
-}
-
-// Define props type for the ActivityLog component
-interface ActivityLogProps {
-  logs: ActivityLogItem[];
-}
-
-const ActivityLog: React.FC<ActivityLogProps> = ({ logs }) => {
-  return (
-    <div className="bg-white shadow-md rounded-lg p-4 h-64 overflow-y-auto">
-      <h2 className="text-lg font-semibold mb-4">Activity Log</h2>
-      <ul className="space-y-2">
-        {logs.map((log, index) => (
-          <li
-            key={index}
-            className="flex items-center justify-between border p-2 rounded-lg"
-          >
-            <div className="flex items-center gap-2">
-              <span className={`w-4 h-4 rounded-full ${log.color}`}></span>
-              <p className="text-sm font-medium text-gray-700">{log.text}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-export default ActivityLog;
-*/
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
