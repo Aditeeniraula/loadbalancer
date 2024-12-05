@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RequestDistribution from "./RequestDistribution";
+import { httpBase } from "../../utils/axios.utils";
 
 const RequestStatistics = () => {
   const [stats, setStats] = useState({
@@ -11,9 +12,7 @@ const RequestStatistics = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/admin/get-statistics"
-        );
+        const response = await httpBase().get("get-statistics");
         const { total, data } = response.data;
 
         setStats({

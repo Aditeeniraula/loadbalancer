@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ActivityLog from "./ActivityLog";
+import { httpBase } from "../../utils/axios.utils";
 interface Replica {
   name: string;
   successful_requests: number;
@@ -14,13 +15,11 @@ const ReplicaOverview: React.FC = () => {
   useEffect(() => {
     const fetchReplicaData = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/admin/get-statistics"
-        );
-        if (!response.ok) {
+        const response = await httpBase().get("get-statistics");
+        if (!response) {
           throw new Error("Failed to fetch replica data");
         }
-        const data = await response.json();
+        const data = await response.data;
 
         if (data.success) {
           setReplicaData(data.data);
@@ -38,11 +37,11 @@ const ReplicaOverview: React.FC = () => {
   }, []);
 
   const availableReplicas = replicaData.filter(
-    (replica) => replica.failed_requests === 0
+    (replica) => replica.failed_requests === 0,
   ).length;
 
   const unavailableReplicas = replicaData.filter(
-    (replica) => replica.failed_requests > 0
+    (replica) => replica.failed_requests > 0,
   ).length;
 
   if (loading) {

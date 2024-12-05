@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { httpBase } from "../../utils/axios.utils";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -10,18 +11,19 @@ const ForgotPassword: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/admin/forgot-password",
+      const response = await httpBase().post(
+        "forgot-password",
         {
-          method: "POST",
+          email: email,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email }),
-        }
+        },
       );
 
-      if (response.ok) {
+      if (response) {
         toast.success("OTP sent to your email! Redirecting...");
 
         setTimeout(() => {

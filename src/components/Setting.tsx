@@ -13,19 +13,19 @@ const Settings: React.FC = () => {
   const [theme, setTheme] = useState("light");
   const [notifications, setNotifications] = useState(true);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("/api/user/profile")
-      .then((response) => {
-        setUsername(response.data.username);
-        setEmail(response.data.email);
-      })
-      .catch(() => {
-        toast.error("Failed to load user information.");
-      });
-  }, []);
+  // useEffect(() => {
+  //   httpBase()
+  //     .get("/api/user/profile")
+  //     .then((response) => {
+  //       setUsername(response.data.username);
+  //       setEmail(response.data.email);
+  //     })
+  //     .catch(() => {
+  //       toast.error("Failed to load user information.");
+  //     });
+  // }, []);
 
   const handleUpdate = () => {
     toast.success("Information updated successfully!");

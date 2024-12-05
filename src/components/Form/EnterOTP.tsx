@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { httpBase } from "../../utils/axios.utils";
 
 const EnterOTP: React.FC = () => {
   const [otp, setOtp] = useState<string>("");
@@ -12,18 +13,19 @@ const EnterOTP: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/admin/forgot-password",
+      const response = await httpBase().post(
+        "forgot-password",
         {
-          method: "POST",
+          otp: otp,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ otp }),
-        }
+        },
       );
 
-      if (response.ok) {
+      if (response) {
         toast.success("OTP verified successfully!");
         navigate("/reset-password");
       } else {

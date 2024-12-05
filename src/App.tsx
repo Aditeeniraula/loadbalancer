@@ -13,15 +13,15 @@ import Settings from "./components/Setting";
 import Servers from "./components/Servers";
 import ReplicaDetails from "./components/Dashboard/ReplicaDetails";
 import { Server, ServerStatus } from "./@types/server.types.d";
-import { QueryClient, QueryClientProvider } from "react-query";
-import ForgotPassword from "./components/Form/ForgotPassword";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import EnterOTP from "./components/Form/EnterOTP";
-import ResetPassword from "./components/Form/ResetPassword";
+import ForgotPassword from "./components/Form/ForgotPassword";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [server, setServer] = useState<Server[]>([
     {
       id: 1,
@@ -53,7 +53,7 @@ function App() {
             <Route path="/register" element={<RegistrationForm />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/enter-otp" element={<EnterOTP />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+            {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
 
             <Route
               path="/dashboard"

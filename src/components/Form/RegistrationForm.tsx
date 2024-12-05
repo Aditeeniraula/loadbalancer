@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { httpBase } from "../../utils/axios.utils";
 
 function containsAlphabet(test: string) {
   return /[a-zA-Z]/.test(test) && /\D/.test(test);
@@ -13,12 +14,11 @@ const RegistrationForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!containsAlphabet(username) ){
-      toast.error("Username must contain alphabets")
+    if (!containsAlphabet(username)) {
+      toast.error("Username must contain alphabets");
       return;
     }
 
@@ -28,19 +28,21 @@ const RegistrationForm: React.FC = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/admin/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await httpBase().post(
+        "register",
+        {
+          username: username,
+          email: email,
+          password: password,
         },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
-      if (response.ok) {
+      if (response.statusText) {
         toast.success("Registration successful!");
         setTimeout(() => navigate("/login"), 2000);
       } else if (response.status === 409) {

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { httpBase } from "../../utils/axios.utils";
 
 const LoginForm: React.FC<{
-  onLogin:  React.Dispatch<React.SetStateAction<boolean>>
-}> = ({
-  onLogin
-}) => {
+  onLogin: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,20 +14,22 @@ const LoginForm: React.FC<{
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await httpBase().post(
+        "login",
+        {
+          username: username,
+          password: password,
         },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
-      if (response.ok) {
+      if (response) {
         toast.success("Login successful!");
-        onLogin(true)
+        onLogin(true);
         setTimeout(() => navigate("/dashboard"), 2000);
       } else {
         toast.error("Invalid credentials");

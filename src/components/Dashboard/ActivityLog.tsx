@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { httpBase } from "../../utils/axios.utils";
 
 interface Replica {
   id: number;
@@ -29,11 +29,10 @@ const ActivityLog: React.FC = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/admin/activity-logs"
-        );
+        const response = await httpBase().get("activity-logs");
         setActivityLog(response.data.data); // Ensure response structure matches
-      } catch (error) {
+      } catch (error: any) {
+        console.log(error);
         setError("Failed to fetch activity logs.");
       } finally {
         setLoading(false);
