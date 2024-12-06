@@ -10,11 +10,12 @@ import LoginForm from "./components/Form/LoginForm";
 import RegistrationForm from "./components/Form/RegistrationForm";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Settings from "./components/Setting";
-import Servers from "./components/Servers";
+import Servers from "./components/Server/Server";
 import ReplicaDetails from "./components/Dashboard/ReplicaDetails";
 import { Server, ServerStatus } from "./@types/server.types.d";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import Probe from "./components/Dashboard/Probe";
+import AddReplica from "./components/Dashboard/AddReplica";
 import EnterOTP from "./components/Form/EnterOTP";
 import ForgotPassword from "./components/Form/ForgotPassword";
 
@@ -65,6 +66,7 @@ function App() {
                 )
               }
             />
+
             <Route
               path="/settings"
               element={
