@@ -30,7 +30,7 @@ const ActivityLog: React.FC = () => {
     const fetchLogs = async () => {
       try {
         const response = await httpBase().get("activity-logs");
-        setActivityLog(response.data.data); // Ensure response structure matches
+        setActivityLog(response.data.data);
       } catch (error: any) {
         console.log(error);
         setError("Failed to fetch activity logs.");
@@ -49,7 +49,8 @@ const ActivityLog: React.FC = () => {
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-semibold mb-4">Activity Logs</h1>
-      <div className="space-y-2">
+      <div className="space-y-2 max-h-80 overflow-y-auto">
+        {" "}
         {activityLog.map((log) => (
           <div
             key={log.ID}
@@ -83,16 +84,6 @@ const ActivityLog: React.FC = () => {
                 >
                   Check
                 </a>
-              </p>
-            </div>
-            <div className="text-sm text-gray-500">
-              <p>
-                <strong>Created:</strong>{" "}
-                {new Date(log.CreatedAt).toLocaleString()}
-              </p>
-              <p>
-                <strong>Updated:</strong>{" "}
-                {new Date(log.UpdatedAt).toLocaleString()}
               </p>
             </div>
           </div>
