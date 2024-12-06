@@ -19,20 +19,26 @@ const ReplicaDetails: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        const response = await httpBase().get("activity-logs");
-        setReplicaDetails(response.data.data);
-      } catch (error: any) {
-        console.log(error);
-        setError("Failed to fetch activity logs.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchReplicaDetails = async () => {
+    try {
+      const response = await httpBase().get("activity-logs");
+      setReplicaDetails(response.data.data);
+    } catch (error: any) {
+      console.log(error);
+      setError("Failed to fetch activity logs.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchLogs();
+  useEffect(() => {
+    fetchReplicaDetails();
+
+    const intervalId = setInterval(fetchReplicaDetails, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   if (loading) return <div className="text-center py-6">Loading logs...</div>;

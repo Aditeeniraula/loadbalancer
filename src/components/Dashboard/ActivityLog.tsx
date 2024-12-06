@@ -26,20 +26,25 @@ const ActivityLog: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        const response = await httpBase().get("activity-logs");
-        setActivityLog(response.data.data);
-      } catch (error: any) {
-        console.log(error);
-        setError("Failed to fetch activity logs.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchLogs = async () => {
+    try {
+      const response = await httpBase().get("activity-logs");
+      setActivityLog(response.data.data);
+    } catch (error: any) {
+      console.log(error);
+      setError("Failed to fetch activity logs.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchLogs();
+
+    const intervalId = setInterval(fetchLogs, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   if (loading) return <div className="text-center py-6">Loading logs...</div>;
@@ -50,7 +55,6 @@ const ActivityLog: React.FC = () => {
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-semibold mb-4">Activity Logs</h1>
       <div className="space-y-2 max-h-80 overflow-y-auto">
-        {" "}
         {activityLog.map((log) => (
           <div
             key={log.ID}
