@@ -18,7 +18,7 @@ interface ActivityLogItem {
   ReplicaID: number;
   CreatedAt: string;
   UpdatedAt: string;
-  Replica: Replica;
+  Replica: Replica | null;
 }
 
 const ActivityLog: React.FC = () => {
@@ -55,7 +55,13 @@ const ActivityLog: React.FC = () => {
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-semibold mb-4">Activity Logs</h1>
       <div className="space-y-2 max-h-80 overflow-y-auto">
-        {activityLog.map((log) => (
+        {activityLog.map((log) => {
+          // Check if Replica is null or undefined
+          const replica = log.Replica;
+          if (!replica) return null;
+        
+        
+        return (
           <div
             key={log.ID}
             className={`flex items-start p-4 rounded-lg shadow-md ${
@@ -73,15 +79,15 @@ const ActivityLog: React.FC = () => {
                 {log.Message}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Replica Name:</strong> {log.Replica.name}
+                <strong>Replica Name:</strong> {replica.name}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Status:</strong> {log.Replica.Status}
+                <strong>Status:</strong> {replica.Status}
               </p>
               <p className="text-sm text-gray-600">
                 <strong>Health Check:</strong>{" "}
                 <a
-                  href={log.Replica.HealthCheckEndpoint}
+                  href={replica.HealthCheckEndpoint}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
@@ -91,7 +97,8 @@ const ActivityLog: React.FC = () => {
               </p>
             </div>
           </div>
-        ))}
+        );
+        })}
       </div>
     </div>
   );

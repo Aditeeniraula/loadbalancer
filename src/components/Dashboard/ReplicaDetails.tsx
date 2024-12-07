@@ -9,7 +9,7 @@ interface Replica {
 }
 
 interface ReplicaDetailsItem {
-  Replica: Replica;
+  Replica: Replica | null;
 }
 
 const ReplicaDetails: React.FC = () => {
@@ -51,7 +51,11 @@ const ReplicaDetails: React.FC = () => {
       {replicaDetails.length > 0 ? (
         <ul className="space-y-4">
           {replicaDetails.map((item, index) => {
-            const status = item.Replica.Status;
+            // Check if item.Replica is null or undefined
+            const replica = item.Replica;
+            if (!replica) return null; // Skip rendering if Replica is null
+
+            const status = replica.Status;
             let statusColor = "";
 
             if (status === "active") {
@@ -68,8 +72,8 @@ const ReplicaDetails: React.FC = () => {
                 className="flex items-center justify-between border p-2 rounded-lg"
               >
                 <div>
-                  <span className="font-semibold">{item.Replica.name}</span>
-                  <p className="text-sm text-gray-500">{item.Replica.url}</p>
+                  <span className="font-semibold">{replica.name}</span>
+                  <p className="text-sm text-gray-500">{replica.url}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span
