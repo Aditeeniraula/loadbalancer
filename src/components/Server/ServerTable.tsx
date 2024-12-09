@@ -13,6 +13,7 @@ const ServerTable: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch the server data
   const fetchLogs = async () => {
     try {
       const response = await httpBase().get("get-replica");
@@ -28,15 +29,30 @@ const ServerTable: React.FC = () => {
   useEffect(() => {
     fetchLogs();
 
-    const intervalId = setInterval(fetchLogs, 5000);
+    const intervalId = setInterval(fetchLogs, 5000); 
     return () => {
       clearInterval(intervalId);
     };
   }, []);
 
+  // Update server status in the table
+  const handleStatusChange = (id: number, newStatus: string) => {
+    setServerTable((prevServers) =>
+      prevServers.map((server) =>
+        server.id === id ? { ...server, status: newStatus } : server
+      )
+    );
+  };
+
+  // Remove server from the table
+  const handleRemoveServer = (id: number) => {
+    setServerTable((prevServers) =>
+      prevServers.filter((server) => server.id !== id)
+    );
+  };
+
   if (loading) return <div className="text-center py-6">Loading logs...</div>;
-  if (error)
-    return <div className="text-center py-6 text-red-500">{error}</div>;
+  if (error) return <div className="text-center py-6 text-red-500">{error}</div>;
 
   return (
     <table className="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -63,7 +79,11 @@ const ServerTable: React.FC = () => {
               </span>
             </td>
             <td className="border px-4 py-2">
-              <ServerActions server={server} />
+              <ServerActions
+                server={server}
+                onStatusChange={handleStatusChange}
+                onRemoveServer={handleRemoveServer}
+              />
             </td>
           </tr>
         ))}

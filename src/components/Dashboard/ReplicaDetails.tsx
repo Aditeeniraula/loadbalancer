@@ -50,8 +50,12 @@ const ReplicaDetails: React.FC = () => {
       <h2 className="text-lg font-semibold mb-4">Replica Details</h2>
       {replicaDetails.length > 0 ? (
         <ul className="space-y-4">
-          {replicaDetails.map((item, index) => {
-            const status = item.Replica.Status;
+           {replicaDetails.map((item, index) => {
+            // Check if item.Replica is null or undefined
+            const replica = item.Replica;
+            if (!replica) return null;
+
+            const status = replica.Status;
             let statusColor = "";
 
             if (status === "active") {
