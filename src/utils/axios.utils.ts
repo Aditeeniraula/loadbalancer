@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-export const httpBase = (
+const httpBase = (
   includeHeader = false,
   additionalConfig: AxiosRequestConfig<any> = {},
   additionalHeader: Record<string, string> | undefined = undefined,
@@ -43,7 +43,7 @@ export const httpBase = (
     (response) => {
       return response;
     },
-    async (error) => {
+    async (error: any) => {
       // const statusCode = error?.response?.status;
       console.log(error);
       // if (statusCode === 401) {
@@ -63,3 +63,5 @@ export const httpBase = (
   );
   return instance;
 };
+
+export default httpBase;
