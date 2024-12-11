@@ -1,50 +1,67 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import RequestDistribution from "./RequestDistribution";
-import { httpBase } from "../../utils/axios.utils";
+import { useStatistics } from "../../core/hooks/fetch/useStatistics";
+import { StatisticsResponse } from "../../types/response.types";
 
 const RequestStatistics = () => {
-  const [stats, setStats] = useState({
+
+  const { data, status } = useStatistics();
+
+  const [totalStats, setTotalStats] = useState({
     successfulRequests: 0,
     failedRequests: 0,
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await httpBase().get("get-statistics");
-        const { total, data } = response.data;
+    if (status === "success") {
+      let totalSuccessfulRequests = 0;
+      let totalFailedRequests = 0;
+      Object(data?.data).forEach((item: StatisticsResponse) => {
+        totalSuccessfulRequests += item.successful_requests;
+        totalFailedRequests += item.failed_requests;
+      });
 
-        setStats({
-          successfulRequests: total.successful_requests,
-          failedRequests: total.failed_requests,
-        });
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
+      setTotalStats({
+        successfulRequests: totalSuccessfulRequests,
+        failedRequests: totalFailedRequests,
+      });
+    }
+  }, [status, data]);
 
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await httpBase().get("get-statistics");
+  //       const { total, data } = response.data;
+
+  //       setStats({
+  //         successfulRequests: total.successful_requests,
+  //         failedRequests: total.failed_requests,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error fetching statistics:", error);
+  //     }
+  //   };
 
   return (
-    <div className="flex-1 bg-white shadow-md rounded-lg p-4">
+    <div className="flex-1 bg-white shadow-md rounded-lg p-4 h-fit">
       <h2 className="text-lg font-semibold mb-4">Request Statistics</h2>
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="text-center">
           <h3 className="text-sm font-medium">Successful Requests</h3>
           <p className="text-2xl font-bold text-green-500">
-            {stats.successfulRequests}
+            {totalStats.successfulRequests}
           </p>
         </div>
         <div className="text-center">
           <h3 className="text-sm font-medium">Failed Requests</h3>
           <p className="text-2xl font-bold text-red-500">
-            {stats.failedRequests}
+            {totalStats.failedRequests}
           </p>
         </div>
       </div>
-      <RequestDistribution data={stats} />
+      {status === "success" && data && <RequestDistribution data={data?.data as StatisticsResponse[]} />}
+
     </div>
   );
 };

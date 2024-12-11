@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { httpBase } from "../../utils/axios.utils";
 import "react-toastify/dist/ReactToastify.css";
+import httpBase from "../../core/utils/axios.utils";
 
 const Probe = () => {
   const [formData, setFormData] = useState({

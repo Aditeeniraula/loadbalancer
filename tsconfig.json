@@ -9,11 +9,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": "./resources/js",
     "resolveJsonModule": true,
-    "paths": {
-      "@/*": ["./*"]
-    },
     "noImplicitAny": true,
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],

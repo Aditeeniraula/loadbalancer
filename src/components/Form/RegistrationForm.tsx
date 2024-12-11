@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { httpBase } from "../../utils/axios.utils";
+import httpBase from "../../core/utils/axios.utils";
 
 function containsAlphabet(test: string) {
   return /[a-zA-Z]/.test(test) && /\D/.test(test);

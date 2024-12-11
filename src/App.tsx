@@ -12,10 +12,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import Settings from "./components/Setting";
 import Servers from "./components/Server/Server";
 import ReplicaDetails from "./components/Dashboard/ReplicaDetails";
-import { Server, ServerStatus } from "./@types/server.types.d";
+import { Server, ServerStatus } from "./types/server.types.d";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Probe from "./components/Dashboard/Probe";
-import AddReplica from "./components/Dashboard/AddReplica";
 import EnterOTP from "./components/Form/EnterOTP";
 import ForgotPassword from "./components/Form/ForgotPassword";
 
@@ -23,23 +21,6 @@ const queryClient = new QueryClient();
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [server, setServer] = useState<Server[]>([
-    {
-      id: 1,
-      name: "server 1",
-      status: ServerStatus.active,
-    },
-    {
-      id: 2,
-      name: "server 2",
-      status: ServerStatus.active,
-    },
-    {
-      id: 3,
-      name: "server 3",
-      status: ServerStatus.inactive,
-    },
-  ]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -60,7 +41,7 @@ function App() {
               path="/dashboard"
               element={
                 isAuthenticated ? (
-                  <Dashboard servers={server} />
+                  <Dashboard />
                 ) : (
                   <Navigate to="/login" replace />
                 )
@@ -81,7 +62,7 @@ function App() {
               path="/servers"
               element={
                 isAuthenticated ? (
-                  <Servers servers={server} setServers={setServer} />
+                  <Servers />
                 ) : (
                   <Navigate to="/login" replace />
                 )

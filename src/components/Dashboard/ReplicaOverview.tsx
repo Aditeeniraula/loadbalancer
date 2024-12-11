@@ -1,60 +1,29 @@
 import React, { useState, useEffect } from "react";
 import ActivityLog from "./ActivityLog";
-import { httpBase } from "../../utils/axios.utils";
-interface Replica {
-  name: string;
-  successful_requests: number;
-  failed_requests: number;
-}
+import { useReplicas } from "../../core/hooks/fetch/useReplicas";
+import { ReplicaDetailResponse } from "../../types/response.types";
+
 
 const ReplicaOverview: React.FC = () => {
-  const [replicaData, setReplicaData] = useState<Replica[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, status } = useReplicas();
+
+  const [replicaStat, setReplicaStat] = useState<{ available: number, unavaiable: number }>({
+    available: 0,
+    unavaiable: 0,
+  });
 
   useEffect(() => {
-    const fetchReplicaData = async () => {
-      try {
-        const response = await httpBase().get("get-statistics");
-        if (!response) {
-          throw new Error("Failed to fetch replica data");
-        }
-        const data = await response.data;
+    if (status === 'success') {
+      const available = Object(data?.data).filter((replica: ReplicaDetailResponse) => replica.status === 'active').length;
+      const unavaiable = Object(data?.data).filter((replica: ReplicaDetailResponse) => replica.status !== 'active').length;
 
-        if (data.success) {
-          setReplicaData(data.data);
-        } else {
-          setError("Failed to fetch replica data");
-        }
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setReplicaStat({ available, unavaiable });
+    }
+  }, [data, status])
 
-    fetchReplicaData();
-  }, []);
-
-  const availableReplicas = replicaData.filter(
-    (replica) => replica.failed_requests === 0,
-  ).length;
-
-  const unavailableReplicas = replicaData.filter(
-    (replica) => replica.failed_requests > 0,
-  ).length;
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  return (
+  return data && status === 'success' && (
     <div className="flex flex-col space-y-6">
-      <div className="bg-white shadow-md rounded-lg p-4 max-w-4xl mx-auto">
+      <div className="bg-white shadow-md rounded-lg p-4">
         <h2 className="text-lg font-semibold mb-4">Replica Overview</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="text-center">
@@ -62,7 +31,7 @@ const ReplicaOverview: React.FC = () => {
               Available Replica
             </h3>
             <p className="text-2xl font-bold text-green-500">
-              {availableReplicas}
+              {replicaStat.available}
             </p>
           </div>
           <div className="text-center">
@@ -70,7 +39,7 @@ const ReplicaOverview: React.FC = () => {
               Unavailable Replica
             </h3>
             <p className="text-2xl font-bold text-red-500">
-              {unavailableReplicas}
+              {replicaStat.unavaiable}
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { httpBase } from "../../utils/axios.utils";
+import httpBase from "../../core/utils/axios.utils";
 
 const LoginForm: React.FC<{
   onLogin: React.Dispatch<React.SetStateAction<boolean>>;

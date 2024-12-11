@@ -11,34 +11,31 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-row bg-gray-100 min-h-screen">
-      <Sidebar className="fixed top-0 left-0 h-screen w-64 bg-[#054bad] text-white shadow-md" />
+      <Sidebar />
 
       <div className="flex-1 ml-64">
         <nav className="flex items-center bg-[#31356e] text-white py-3 px-6 shadow-md">
           <h1 className="text-lg font-bold">Dashboard</h1>
           <div className="flex ml-auto space-x-4">
             <button
-              className={`py-1 px-4 rounded-md ${
-                activeTab === "Replica" ? "bg-blue-700" : "hover:bg-blue-600"
-              }`}
+              className={`py-1 px-4 rounded-md ${activeTab === "Replica" ? "bg-blue-700" : "hover:bg-blue-600"
+                }`}
               onClick={() => setActiveTab("Replica")}
             >
               Replica
             </button>
             <button
-              className={`py-1 px-4 rounded-md ${
-                activeTab === "Probe" ? "bg-blue-700" : "hover:bg-blue-600"
-              }`}
+              className={`py-1 px-4 rounded-md ${activeTab === "Probe" ? "bg-blue-700" : "hover:bg-blue-600"
+                }`}
               onClick={() => setActiveTab("Probe")}
             >
               Probe
             </button>
             <button
-              className={`py-1 px-4 rounded-md ${
-                activeTab === "Add Replica"
-                  ? "bg-blue-700"
-                  : "hover:bg-blue-600"
-              }`}
+              className={`py-1 px-4 rounded-md ${activeTab === "Add Replica"
+                ? "bg-blue-700"
+                : "hover:bg-blue-600"
+                }`}
               onClick={() => setActiveTab("Add Replica")}
             >
               Add Replica

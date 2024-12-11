@@ -1,13 +1,8 @@
 import React from "react";
-
-interface Server {
-  id: number;
-  name: string;
-  status: string;
-}
+import { ReplicaDetailResponse } from "../../types/response.types";
 
 interface ServerActionsProps {
-  server: Server;
+  server: ReplicaDetailResponse;
 }
 
 const ServerActions: React.FC<ServerActionsProps> = ({ server }) => {
@@ -15,25 +10,14 @@ const ServerActions: React.FC<ServerActionsProps> = ({ server }) => {
     console.log(`Changing status of ${server.name}`);
   };
 
-  const removeServer = () => {
-    console.log(`Removing ${server.name}`);
-  };
-
   return (
     <div>
       <button
+        disabled={server.status === "inactive"}
         onClick={changeStatus}
-        className={`px-4 py-2 rounded-lg ${
-          server.status === "active" ? "bg-yellow-500" : "bg-green-500"
-        } text-white mr-2`}
+        className={`px-4 py-2 rounded-lg ${server.status === "active" ? "bg-red-500" : server.status === "inactive" ? "bg-gray-500" : "bg-green-400"} text-white mr-2`}
       >
-        {server.status === "active" ? "Deactivate" : "Activate"}
-      </button>
-      <button
-        onClick={removeServer}
-        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-      >
-        Remove
+        {server.status === "active" ? "Disable" : "Activate"}
       </button>
     </div>
   );

@@ -1,7 +1,8 @@
+
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { httpBase } from "../../utils/axios.utils";
+import httpBase from "../../core/utils/axios.utils";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");

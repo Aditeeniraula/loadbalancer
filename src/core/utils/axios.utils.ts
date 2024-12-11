@@ -24,13 +24,13 @@ const httpBase = (
     //   config.headers.Authorization = `Bearer ${token}`;
     // }
 
+    config.headers["Accept"] = "application/json";
     if (
       config.method === "POST" ||
       config.method === "PUT" ||
       config.method === "PATCH"
     ) {
       config.headers["Content-Type"] = "multipart/form-data";
-      config.headers["Accept"] = "application/json";
     }
 
     return config;
