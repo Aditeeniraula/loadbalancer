@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { LogService } from "../../services/logs.services";
+import { LogService } from "../services/logs.services";
 
 export const useActivityLogs = () => {
     return useQuery({

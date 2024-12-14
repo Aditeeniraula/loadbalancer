@@ -5,6 +5,7 @@ import Login from "../pages/auth/login";
 import Register from "../pages/auth/register";
 import ForgotPassword from "../pages/auth/forgot-password";
 import ResetPassword from "../pages/auth/reset-password";
+import EnterOTP from "../pages/auth/enter-otp";
 
 export const GuestRoutes: RouteObject = {
     path: '/',
@@ -33,6 +34,10 @@ export const GuestRoutes: RouteObject = {
         {
             path: '/reset-password',
             element: <ResetPassword />
+        },
+        {
+            path: '/enter-otp',
+            element: <EnterOTP />
         },
         // {
         //     path: '/*',

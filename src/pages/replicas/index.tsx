@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useReplicas } from "../../core/hooks/fetch/useReplicas";
+import { useReplicas } from "../../core/hooks/useReplicas";
 import { ReplicaDetailResponse } from "../../types/response.types";
 
 

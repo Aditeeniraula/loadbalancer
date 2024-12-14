@@ -4,7 +4,6 @@ import { Outlet } from 'react-router'
 const GuestLayout = () => {
     return (
         <main>
-            {/* <Sidebar /> */}
             <Outlet />
         </main>
     )

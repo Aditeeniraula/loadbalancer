@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ActivityLog from "./ActivityLog";
-import { useReplicas } from "../../core/hooks/fetch/useReplicas";
 import { ReplicaDetailResponse } from "../../types/response.types";
+import { useReplicas } from "../../core/hooks/useReplicas";
 
 
 const ReplicaOverview: React.FC = () => {

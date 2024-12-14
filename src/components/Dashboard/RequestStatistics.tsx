@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RequestDistribution from "./RequestDistribution";
-import { useStatistics } from "../../core/hooks/fetch/useStatistics";
 import { StatisticsResponse } from "../../types/response.types";
+import { useStatistics } from "../../core/hooks/useStatistics";
 
 const RequestStatistics = () => {
 

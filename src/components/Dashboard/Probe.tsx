@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import "react-toastify/dist/ReactToastify.css";
-import { useProbeParameters } from "../../core/hooks/fetch/useProbeParameter";
 import { useMutation } from "@tanstack/react-query";
 import { ProbeData, ProbeService } from "../../core/services/probe.services";
 import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { useProbeParameters } from "../../core/hooks/useProbeParameter";
 
 const Probe = () => {
 
@@ -59,7 +59,7 @@ const Probe = () => {
     }, onSuccess: () => {
       toast.success("Probe parameters updated successfully")
     },
-    onError: (error) => {
+    onError: (error: AxiosError) => {
       toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
     }
   });

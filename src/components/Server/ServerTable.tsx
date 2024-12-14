@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ServerActions from "./ServerActions";
-import { useReplicas } from "../../core/hooks/fetch/useReplicas";
 import { ReplicaDetailResponse } from "../../types/response.types";
 import { capitalizeFirstLetter } from "../../core/utils/helper.utils";
+import { useReplicas } from "../../core/hooks/useReplicas";
 
 const ServerTable: React.FC = () => {
   const { data, status } = useReplicas();

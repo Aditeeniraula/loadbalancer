@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ReplicaService } from "../../services/replica.services";
+import { ReplicaService } from "../services/replica.services";
 
 export const useReplicas = () => {
     return useQuery({

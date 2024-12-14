@@ -1,6 +1,6 @@
 import React from "react";
-import { useActivityLogs } from "../../core/hooks/fetch/useActivityLogs";
 import { ActivityLogResponse } from "../../types/response.types";
+import { useActivityLogs } from "../../core/hooks/useActivityLogs";
 
 const ActivityLog: React.FC = () => {
   const { data, status } = useActivityLogs();

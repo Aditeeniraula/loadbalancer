@@ -12,4 +12,21 @@ export class UserService {
         const res: AxiosResponse<SuccessResponse<any>> = await httpUtils.patch(`update/${id}`, data);
         return res.data;
     }
+
+    static async forgotPassword(email: string) {
+        const res: AxiosResponse<SuccessResponse<any>> = await httpUtils.post("forgot-password", {
+            email: email,
+        });
+
+        return res.data;
+    }
+
+    static async resetPassword(otp: string, new_password: string) {
+        const res: AxiosResponse<SuccessResponse<any>> = await httpUtils.post("reset-password", {
+            otp: otp,
+            new_password: new_password
+        });
+
+        return res.data;
+    }
 }

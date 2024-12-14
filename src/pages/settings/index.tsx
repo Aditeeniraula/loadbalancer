@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { UserService } from "../../core/services/user.services";
-import { useUsers } from "../../core/hooks/fetch/useUser";
+import { useUsers } from "../../core/hooks/useUser";
 
 const Settings: React.FC = () => {
     const [currentPassword, setCurrentPassword] = useState("");

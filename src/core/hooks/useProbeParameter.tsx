@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ProbeService } from "../../services/probe.services";
+import { ProbeService } from "../services/probe.services";
 
 export const useProbeParameters = () => {
     return useQuery({
