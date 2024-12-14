@@ -2,14 +2,12 @@ import React from "react";
 import { useActivityLogs } from "../../core/hooks/fetch/useActivityLogs";
 import { ActivityLogResponse } from "../../types/response.types";
 
-
-
 const ActivityLog: React.FC = () => {
   const { data, status } = useActivityLogs();
 
   return data && status == 'success' &&
     (
-      <div className="space-y-4 bg-white shadow-md rounded-lg p-4" >
+      <div className="space-y-4 bg-white shadow-md rounded-lg p-4 h-[75vh] overflow-auto" >
         <h1 className="text-lg font-semibold mb-4">Activity Logs</h1>
         <div className="space-y-2 overflow-y-auto h-fit">
           {Object(data?.data).map((item: ActivityLogResponse) => (
@@ -27,12 +25,13 @@ const ActivityLog: React.FC = () => {
                 >
                   {item.message}
                 </p>
-                <p className="text-sm text-gray-600">
+                {item?.replica?.name && (<> <p className="text-sm text-gray-600">
                   <strong>Replica Name:</strong> {item?.replica?.name}
                 </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Status:</strong> {item?.replica?.status}
-                </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Status:</strong> {item?.replica?.status}
+                  </p></>
+                )}
               </div>
             </div>
           ))}

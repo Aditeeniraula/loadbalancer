@@ -1,44 +1,69 @@
 import React, { useState } from "react";
+import { ReplicaData, ReplicaService } from "../../core/services/replica.services";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { isValidUrl } from "../../core/utils/helper.utils";
 
 const AddReplica = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ReplicaData>({
     name: "",
     url: "",
-    healthcheck_endpoint: "",
+    health_check_endpoint: "",
   });
 
-  const handleChange = (e) => {
+  const validate = (checkUrl: string) => {
+    if (!isValidUrl(checkUrl)) {
+      toast.error("Url form is invalid")
+      return "error"
+    }
+
+    if (!formData.name) {
+      toast.error("Replica name is required")
+      return "error"
+    }
+
+    if (!formData.health_check_endpoint) {
+      toast.error("Health check route is required")
+      return "error"
+    }
+
+    return "success"
+  }
+
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:8080/admin/add-replica", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Replica added successfully!");
-      } else {
-        alert(`Error: ${data.message || "Failed to add replica"}`);
-      }
-    } catch (error) {
-      console.error("Error submitting the form:", error);
-      alert("An error occurred while adding the replica.");
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      const res = await ReplicaService.store(formData)
+      return res
+    },
+    onSuccess: () => {
+      toast.success("Replica added successfully!")
+      setFormData({
+        name: "",
+        url: "",
+        health_check_endpoint: "",
+      })
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
     }
-  };
+  })
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 max-w-md mx-auto">
       <h2 className="text-lg font-medium mb-3">Add Replica</h2>
-      <form className="space-y-3" onSubmit={handleSubmit}>
+      <form className="space-y-3" onSubmit={(e) => {
+        e.preventDefault();
+        if (validate(formData.url) !== "success") {
+          return
+        }
+        mutate()
+      }}>
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Replica Name
@@ -73,8 +98,8 @@ const AddReplica = () => {
           </label>
           <input
             type="text"
-            name="healthcheck_endpoint"
-            value={formData.healthcheck_endpoint}
+            name="health_check_endpoint"
+            value={formData.health_check_endpoint}
             onChange={handleChange}
             className="mt-1 block w-full px-2 py-1 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter health check route"

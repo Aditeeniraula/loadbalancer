@@ -28,21 +28,6 @@ const RequestStatistics = () => {
     }
   }, [status, data]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await httpBase().get("get-statistics");
-  //       const { total, data } = response.data;
-
-  //       setStats({
-  //         successfulRequests: total.successful_requests,
-  //         failedRequests: total.failed_requests,
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching statistics:", error);
-  //     }
-  //   };
-
   return (
     <div className="flex-1 bg-white shadow-md rounded-lg p-4 h-fit">
       <h2 className="text-lg font-semibold mb-4">Request Statistics</h2>

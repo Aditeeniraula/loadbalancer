@@ -11,6 +11,7 @@ export interface StatisticsResponse {
     failed_requests: number;
     created_at: string;
     updated_at: string;
+    Replica: ReplicaDetailResponse
 }
 
 export interface ReplicaDetailResponse {
@@ -31,4 +32,21 @@ export interface ActivityLogResponse {
     created_at: string;
     updated_at: string;
     replica?: ReplicaDetailResponse;
+}
+
+export interface UserResponse {
+    id: number
+    username: string
+    email: string
+    created_at: string
+    updated_at: string
+}
+
+export interface ProbeResponse {
+    id: number;
+    max_life_time: number;
+    pool_size: number;
+    probe_factor: number;
+    probe_remove_factor: number;
+    mu: number;
 }

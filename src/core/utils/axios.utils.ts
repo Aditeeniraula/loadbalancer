@@ -20,9 +20,10 @@ const httpBase = (
    * REQUEST INTERCEPTORS
    */
   instance.interceptors.request.use((config) => {
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
     config.headers["Accept"] = "application/json";
     if (
@@ -46,15 +47,15 @@ const httpBase = (
     async (error: any) => {
       // const statusCode = error?.response?.status;
       console.log(error);
-      // if (statusCode === 401) {
-      //   const token = await getLocalStorage(AppConfig.auth_token);
+      // if (error.statusCode === 401) {
+      //   const token = await localStorage.getItem("token");
 
       //   if (token) {
       //     localStorage.clear();
-      //     useAuthStore.getState().resetState();
+      //     // useAuthStore.getState().resetState();
       //     // toast that session has expired
       //   }
-      // } else if (statusCode === 403) {
+      // } else if (error.statusCode === 403) {
       //   // router navigate to 403 page
       //   throw new Error("i am 403 error");
       // }

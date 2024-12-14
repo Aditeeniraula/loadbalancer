@@ -1,47 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ServerActions from "./ServerActions";
-import httpBase from "../../core/utils/axios.utils";
 import { useReplicas } from "../../core/hooks/fetch/useReplicas";
 import { ReplicaDetailResponse } from "../../types/response.types";
-
-interface Server {
-  id: number;
-  name: string;
-  status: string;
-}
+import { capitalizeFirstLetter } from "../../core/utils/helper.utils";
 
 const ServerTable: React.FC = () => {
-  // const [serverTable, setServerTable] = useState<Server[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
-
   const { data, status } = useReplicas();
-  // const fetchLogs = async () => {
-  //   try {
-  //     const response = await httpBase().get("get-replica");
-  //     setServerTable(response.data.data);
-  //   } catch (error: any) {
-  //     console.error(error);
-  //     setError("Failed to fetch server data.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   fetchLogs();
-
-  //   const intervalId = setInterval(fetchLogs, 5000);
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
-
-  // if (loading) return <div className="text-center py-6">Loading logs...</div>;
-  // if (error)
-  //   return <div className="text-center py-6 text-red-500">{error}</div>;
-
-  return data && status === 'success' && (
+  return data?.data && status === 'success' && (
     <table className="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
       <thead className="bg-gray-200">
         <tr>
@@ -61,11 +27,11 @@ const ServerTable: React.FC = () => {
                 className={`px-2 py-1 rounded-lg ${item.status === "active" ? "bg-green-500" : "bg-red-500"
                   } text-white`}
               >
-                {item.status}
+                {capitalizeFirstLetter(item.status)}
               </span>
             </td>
             <td className="border px-4 py-2">
-              <ServerActions server={data} />
+              <ServerActions server={item} />
             </td>
           </tr>
         ))}

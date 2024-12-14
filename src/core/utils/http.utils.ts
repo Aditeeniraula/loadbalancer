@@ -55,13 +55,13 @@ class Http {
     additionalHeaders: Record<string, string> | undefined = undefined,
     additionalAxiosOptions: AxiosRequestConfig = {}
   ) {
-    const formData = setFormData(filterParams(data))
+    // const formData = setFormData(filterParams(data))
 
     return await httpBase(
       responseHeader,
       additionalAxiosOptions,
       additionalHeaders
-    ).post(url, formData)
+    ).post(url, data)
   }
 
   /**
@@ -79,17 +79,12 @@ class Http {
     additionalHeaders: Record<string, string> | undefined = undefined,
     additionalAxiosOptions: AxiosRequestConfig = {}
   ) {
-    /** Method override */
-    data = {
-      ...data,
-      _method: 'put',
-    }
-    const formData = setFormData(filterParams(data))
+    // const formData = setFormData(filterParams(data))
     return await httpBase(
       responseHeader,
       additionalAxiosOptions,
       additionalHeaders
-    ).post(`${url}`, formData)
+    ).post(`${url}`, data)
   }
 
   /**
@@ -107,17 +102,12 @@ class Http {
     additionalHeaders: Record<string, string> | undefined = undefined,
     additionalAxiosOptions: AxiosRequestConfig = {}
   ) {
-    /** Method override */
-    data = {
-      ...data,
-      _method: 'patch',
-    }
-    const formData = setFormData(filterParams(data))
+    // const formData = setFormData(filterParams(data))
     return await httpBase(
       responseHeader,
       additionalAxiosOptions,
       additionalHeaders
-    ).post(`${url}`, formData)
+    ).patch(`${url}`, data)
   }
 
   /**

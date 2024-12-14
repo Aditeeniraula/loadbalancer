@@ -1,6 +1,7 @@
 export enum ServerStatus {
   active = "active",
   inactive = "inactive",
+  disabled = "disabled",
 }
 
 export interface Server {

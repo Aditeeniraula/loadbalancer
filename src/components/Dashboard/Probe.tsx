@@ -1,49 +1,68 @@
-import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import React, { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import httpBase from "../../core/utils/axios.utils";
+import { useProbeParameters } from "../../core/hooks/fetch/useProbeParameter";
+import { useMutation } from "@tanstack/react-query";
+import { ProbeData, ProbeService } from "../../core/services/probe.services";
+import toast from "react-hot-toast";
 
 const Probe = () => {
-  const [formData, setFormData] = useState({
-    max_life_time: "",
-    pool_size: "",
-    probe_factor: "",
-    probe_remove_factor: "",
-    mu: "",
+
+  const { data, status } = useProbeParameters();
+
+  const [formData, setFormData] = useState<ProbeData>({
+    max_life_time: 0,
+    pool_size: 0,
+    probe_factor: 0,
+    probe_remove_factor: 0,
+    mu: 0,
+    status: "inactive"
   });
+
+  useEffect(() => {
+    if (status === "success") {
+      setFormData({
+        ...formData,
+        max_life_time: data?.max_life_time,
+        pool_size: data?.pool_size,
+        probe_factor: data?.probe_factor,
+        probe_remove_factor: data?.probe_remove_factor,
+        mu: data?.mu,
+      });
+    }
+
+    if (status === "error") {
+      setFormData({
+        ...formData,
+        max_life_time: 1,
+        pool_size: 16,
+        probe_factor: 1.2,
+        probe_remove_factor: 1,
+        mu: 1,
+      })
+    }
+  }, [status])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await httpBase().post(
-        "/admin/update-prequal-parameters",
-        formData
-      );
+  const validate = () => {
+    return true
+  }
 
-      if (response) {
-        toast.success("Replica added successfully!");
-        setFormData({
-          max_life_time: "",
-          pool_size: "",
-          probe_factor: "",
-          probe_remove_factor: "",
-          mu: "",
-        });
-      } else {
-        toast.error(
-          `Error: ${response.data.message || "Failed to add replica"}`
-        );
-      }
-    } catch (error: any) {
-      console.error("Error submitting the form:", error);
-      toast.error("An error occurred while adding the replica.");
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      const res = await ProbeService.update(formData)
+
+      return res.data
+    }, onSuccess: () => {
+      toast.success("Probe parameters updated successfully")
+    },
+    onError: (error) => {
+      toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
     }
-  };
+  });
 
   return (
     <div>
@@ -51,7 +70,11 @@ const Probe = () => {
         <h2 className="text-lg font-medium mb-3">
           Probe to Reduce Latency Parameters
         </h2>
-        <form className="space-y-3" onSubmit={handleSubmit}>
+        <form className="space-y-3" onSubmit={(e) => {
+          e.preventDefault()
+          validate()
+          mutate()
+        }}>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Max Life Time
@@ -126,10 +149,9 @@ const Probe = () => {
             type="submit"
             className="w-full bg-blue-500 text-white py-1 px-3 text-sm rounded-md hover:bg-blue-600"
           >
-            Submit
+            Update
           </button>
         </form>
-        <ToastContainer />
       </div>
     </div>
   );

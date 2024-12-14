@@ -1,17 +1,17 @@
 import React from "react";
 import Chart from "react-apexcharts";
 import { StatisticsResponse } from "../../types/response.types";
+import { ApexOptions } from "apexcharts";
 
 interface RequestDistributionProps {
   data: StatisticsResponse[];
 }
 
-
 const colorsList = ["#00C7AA", "#5F9E00", "#D14F3A", "#E6A1A1", "FFABFA", "01FFCC"]
 
 const RequestDistribution: React.FC<RequestDistributionProps> = ({ data }) => {
   const labels: any[] = Object(data).map((item: StatisticsResponse) => {
-    return item.url;
+    return item.Replica.name;
   });
 
   const seriesData = Object(data).map((item: StatisticsResponse) => {
@@ -23,7 +23,6 @@ const RequestDistribution: React.FC<RequestDistributionProps> = ({ data }) => {
       return colorsList[index % colorsList.length];
     }
     return colorsList[index];
-
   });
 
   const chartOptions = {
@@ -45,7 +44,7 @@ const RequestDistribution: React.FC<RequestDistributionProps> = ({ data }) => {
       <h2 className="text-lg font-semibold mb-4">Request Distribution</h2>
       <Chart
         series={seriesData}
-        options={chartOptions}
+        options={chartOptions as ApexOptions}
         type="pie"
         width="100%"
         height={300}

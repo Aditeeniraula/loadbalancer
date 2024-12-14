@@ -43,33 +43,6 @@ const ReplicaOverview: React.FC = () => {
             </p>
           </div>
         </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center bg-blue-50 border border-blue-200 rounded-lg p-4 max-h-32 overflow-hidden">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 flex items-center justify-center bg-blue-500 rounded-full">
-                <span className="font-bold text-lg text-white">✔</span>
-              </div>
-              <div>
-                <h3 className="text-xs font-medium text-gray-700">HTTP/SSL</h3>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-h-32 overflow-hidden">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 flex items-center justify-center bg-yellow-500 rounded-full">
-                <span className="text-white font-bold text-lg">−</span>
-              </div>
-              <div>
-                <h3 className="text-xs font-medium text-gray-700">
-                  Rate Limit
-                </h3>
-                <p className="text-sm font-semibold text-yellow-500">100</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <ActivityLog />
     </div>
