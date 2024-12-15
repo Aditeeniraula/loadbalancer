@@ -3,7 +3,6 @@ import { ReplicaData, ReplicaService } from "../../core/services/replica.service
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
-import { isValidUrl } from "../../core/utils/helper.utils";
 
 const AddReplica = () => {
   const [formData, setFormData] = useState<ReplicaData>({
@@ -12,12 +11,7 @@ const AddReplica = () => {
     health_check_endpoint: "",
   });
 
-  const validate = (checkUrl: string) => {
-    if (!isValidUrl(checkUrl)) {
-      toast.error("Url form is invalid")
-      return "error"
-    }
-
+  const validate = () => {
     if (!formData.name) {
       toast.error("Replica name is required")
       return "error"

@@ -7,32 +7,49 @@ interface RequestDistributionProps {
   data: StatisticsResponse[];
 }
 
-const colorsList = ["#00C7AA", "#5F9E00", "#D14F3A", "#E6A1A1", "FFABFA", "01FFCC"]
+// const colorsList = ["#00C7AA", "#5F9E00", "#D14F3A", "#E6A1A1", "FFABFA", "01FFCC"]
 
 const RequestDistribution: React.FC<RequestDistributionProps> = ({ data }) => {
-  const labels: any[] = Object(data).map((item: StatisticsResponse) => {
+
+  const labels: any[] = Object(data).filter((item: StatisticsResponse) => {
+    if (item.successful_requests === 0 || item.Replica === null) {
+      return false
+    }
+    return true
+  }).map((item: StatisticsResponse) => {
     return item.Replica.name;
   });
 
-  const seriesData = Object(data).map((item: StatisticsResponse) => {
+  const seriesData = Object(data).filter((item: StatisticsResponse) => {
+    if (item.successful_requests === 0) {
+      return false
+    }
+    return true
+  }).map((item: StatisticsResponse) => {
     return item.successful_requests;
   });
 
-  const colors = Object(data).map((_: StatisticsResponse, index: number) => {
-    if (index >= colorsList.length) {
-      return colorsList[index % colorsList.length];
-    }
-    return colorsList[index];
-  });
+  // const colors = Object(data).map((_: StatisticsResponse, index: number) => {
+  //   if (index >= colorsList.length) {
+  //     return colorsList[index % colorsList.length];
+  //   }
+  //   return colorsList[index];
+  // });
 
   const chartOptions = {
     chart: {
       type: "pie",
+      width: "100%",
     },
     labels: labels,
-    colors: colors,
+    // colors: colors,
     legend: {
       position: "bottom",
+    },
+    theme: {
+      monochrome: {
+        enabled: true,
+      },
     },
     dataLabels: {
       enabled: true,

@@ -10,12 +10,12 @@ const ActivityLog: React.FC = () => {
       <div className="space-y-4 bg-white shadow-md rounded-lg p-4 h-[75vh] overflow-auto" >
         <h1 className="text-lg font-semibold mb-4">Activity Logs</h1>
         <div className="space-y-2 overflow-y-auto h-fit">
-          {Object(data?.data).map((item: ActivityLogResponse) => (
+          {Object(data.data).map((item: ActivityLogResponse) => (
             <div
               key={item.id}
               className={`flex items-start p-4 rounded-lg shadow-md ${item.type === "success"
-                ? "bg-green-100 border-green-400"
-                : "bg-red-100 border-red-400"
+                ? "bg-green-100 border-green-400" : item.type === "warning" ? "bg-yellow-100 border-yellow-400"
+                  : "bg-red-100 border-red-400"
                 } border`}
             >
               <div className="flex-1">
