@@ -13,12 +13,17 @@ const ReplicaOverview: React.FC = () => {
   });
 
   useEffect(() => {
-    if (status === 'success') {
-      const available = Object(data?.data).filter((replica: ReplicaDetailResponse) => replica.status === 'active').length;
-      const unavaiable = Object(data?.data).filter((replica: ReplicaDetailResponse) => replica.status !== 'active').length;
+    try {
+      if (status === 'success') {
+        const available = Object(data?.data).filter((replica: ReplicaDetailResponse) => replica.status === 'active').length;
+        const unavaiable = Object(data?.data).filter((replica: ReplicaDetailResponse) => replica.status !== 'active').length;
 
-      setReplicaStat({ available, unavaiable });
+        setReplicaStat({ available, unavaiable });
+      }
+    } catch (err: any) {
+      console.log(err)
     }
+
   }, [data, status])
 
   return data && status === 'success' && (

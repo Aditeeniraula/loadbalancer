@@ -44,7 +44,8 @@ const AddReplica = () => {
       })
     },
     onError: (error: AxiosError) => {
-      toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
+      console.log(error)
+      // toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
     }
   })
 

@@ -5,6 +5,5 @@ export const useProbeParameters = () => {
     return useQuery({
         queryKey: ['prequal-parameters'],
         queryFn: ProbeService.show,
-        refetchInterval: 5000,
     });
 };

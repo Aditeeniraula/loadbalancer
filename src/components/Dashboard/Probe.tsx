@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ProbeData, ProbeService } from "../../core/services/probe.services";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { useProbeParameters } from "../../core/hooks/useProbeParameter";
 
+
 const Probe = () => {
 
   const { data, status } = useProbeParameters();
+  const queryClient = useQueryClient()
 
   const [formData, setFormData] = useState<ProbeData>({
-    max_life_time: 0,
-    pool_size: 0,
-    probe_factor: 0,
-    probe_remove_factor: 0,
-    mu: 0,
+    max_life_time: 1,
+    pool_size: 16,
+    probe_factor: 1.2,
+    probe_remove_factor: 1,
+    mu: 1,
     status: "inactive"
   });
 
@@ -44,10 +46,55 @@ const Probe = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: Number(value) });
   };
 
   const validate = () => {
+    if (formData.max_life_time <= 0) {
+      toast.error("Max life time must be greater than 0")
+      return false
+    }
+
+    if (!Number.isInteger(formData.max_life_time)) {
+      toast.error("Max life time must be an integer")
+      return false
+    }
+
+    if (formData.pool_size <= 10) {
+      toast.error("Pool size must be greater than 10")
+      return false
+    }
+
+    if (!Number.isInteger(formData.pool_size)) {
+      toast.error("Pool size must be an integer")
+      return false
+    }
+
+    if (formData.probe_factor <= 0) {
+      toast.error("Probe factor must be greater than 0")
+      return false
+    }
+
+    if (formData.probe_remove_factor <= 0) {
+      toast.error("Probe remove factor must be greater than 0")
+      return false
+    }
+
+    if (!Number.isInteger(formData.probe_remove_factor)) {
+      toast.error("Probe remove factor must be an integer")
+      return false
+    }
+
+    if (formData.mu <= 0) {
+      toast.error("Scale factor mu must be greater than 0")
+      return false
+    }
+
+    if (!Number.isInteger(formData.mu)) {
+      toast.error("Scale factor mu must be an integer")
+      return false
+    }
+
     return true
   }
 
@@ -57,10 +104,14 @@ const Probe = () => {
 
       return res.data
     }, onSuccess: () => {
+      queryClient.invalidateQueries(["probe-parameters"])
       toast.success("Probe parameters updated successfully")
     },
     onError: (error: AxiosError) => {
-      toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
+      if (error) {
+        console.log(error)
+        toast.error(`${"Failed to update probe parameters"}`)
+      }
     }
   });
 
@@ -72,7 +123,9 @@ const Probe = () => {
         </h2>
         <form className="space-y-3" onSubmit={(e) => {
           e.preventDefault()
-          validate()
+          if (!validate()) {
+            return
+          }
           mutate()
         }}>
           <div>

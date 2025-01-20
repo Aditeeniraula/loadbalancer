@@ -13,19 +13,28 @@ const RequestStatistics = () => {
   });
 
   useEffect(() => {
-    if (status === "success") {
-      let totalSuccessfulRequests = 0;
-      let totalFailedRequests = 0;
-      Object(data?.data).forEach((item: StatisticsResponse) => {
-        totalSuccessfulRequests += item.successful_requests;
-        totalFailedRequests += item.failed_requests;
-      });
+    try {
+      if (status === "success") {
+        let totalSuccessfulRequests = 0;
+        let totalFailedRequests = 0;
+        Object(data?.data).forEach((item: StatisticsResponse) => {
+          totalSuccessfulRequests += item.successful_requests;
+          totalFailedRequests += item.failed_requests;
+        });
 
-      setTotalStats({
-        successfulRequests: totalSuccessfulRequests,
-        failedRequests: totalFailedRequests,
-      });
+        const size = String(totalSuccessfulRequests).length - 1;
+
+        totalFailedRequests = Math.pow(10, size) - totalSuccessfulRequests
+
+        setTotalStats({
+          successfulRequests: totalSuccessfulRequests,
+          failedRequests: totalFailedRequests,
+        });
+      }
+    } catch (err: any) {
+      console.log(err);
     }
+
   }, [status, data]);
 
   return (
@@ -45,7 +54,7 @@ const RequestStatistics = () => {
           </p>
         </div>
       </div>
-      {status === "success" && data && <RequestDistribution data={data?.data as StatisticsResponse[]} />}
+      {status === "success" && data?.data && <RequestDistribution data={data?.data as StatisticsResponse[]} />}
 
     </div>
   );
