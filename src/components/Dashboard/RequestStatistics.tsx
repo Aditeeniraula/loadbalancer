@@ -1,41 +1,45 @@
-import React, { useEffect, useState } from "react";
-import RequestDistribution from "./RequestDistribution";
-import { StatisticsResponse } from "../../types/response.types";
-import { useStatistics } from "../../core/hooks/useStatistics";
+import React, { useEffect, useState } from "react"
+import RequestDistribution from "./RequestDistribution"
+import { StatisticsResponse } from "../../types/response.types"
+import { useStatistics } from "../../core/hooks/useStatistics"
+
+function findSmallestAbove(num: number, base: number) {
+  return Math.ceil(num / base) * base
+}
 
 const RequestStatistics = () => {
-
-  const { data, status } = useStatistics();
+  const { data, status } = useStatistics()
 
   const [totalStats, setTotalStats] = useState({
     successfulRequests: 0,
     failedRequests: 0,
-  });
+  })
 
   useEffect(() => {
     try {
       if (status === "success") {
-        let totalSuccessfulRequests = 0;
-        let totalFailedRequests = 0;
+        let totalSuccessfulRequests = 0
+        let totalFailedRequests = 0
         Object(data?.data).forEach((item: StatisticsResponse) => {
-          totalSuccessfulRequests += item.successful_requests;
-          totalFailedRequests += item.failed_requests;
-        });
+          totalSuccessfulRequests += item.successful_requests
+          totalFailedRequests += item.failed_requests
+        })
 
-        const size = String(totalSuccessfulRequests).length - 1;
+        // const size = String(totalSuccessfulRequests).length;
+        // const base = Math.pow(10, size - 1);
 
-        totalFailedRequests = Math.pow(10, size) - totalSuccessfulRequests
+        // totalFailedRequests = findSmallestAbove(totalSuccessfulRequests, base);
+        // totalFailedRequests -= totalSuccessfulRequests
 
         setTotalStats({
           successfulRequests: totalSuccessfulRequests,
           failedRequests: totalFailedRequests,
-        });
+        })
       }
     } catch (err: any) {
-      console.log(err);
+      console.log(err)
     }
-
-  }, [status, data]);
+  }, [status, data])
 
   return (
     <div className="flex-1 bg-white shadow-md rounded-lg p-4 h-fit">
@@ -54,10 +58,11 @@ const RequestStatistics = () => {
           </p>
         </div>
       </div>
-      {status === "success" && data?.data && <RequestDistribution data={data?.data as StatisticsResponse[]} />}
-
+      {status === "success" && data?.data && (
+        <RequestDistribution data={data?.data as StatisticsResponse[]} />
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default RequestStatistics;
+export default RequestStatistics

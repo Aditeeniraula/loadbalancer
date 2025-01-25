@@ -1,15 +1,18 @@
-import React, { useState } from "react";
-import { ReplicaData, ReplicaService } from "../../core/services/replica.services";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
+import React, { useState } from "react"
+import {
+  ReplicaData,
+  ReplicaService,
+} from "../../core/services/replica.services"
+import { useMutation } from "@tanstack/react-query"
+import toast from "react-hot-toast"
+import { AxiosError } from "axios"
 
 const AddReplica = () => {
   const [formData, setFormData] = useState<ReplicaData>({
     name: "",
     url: "",
     health_check_endpoint: "",
-  });
+  })
 
   const validate = () => {
     if (!formData.name) {
@@ -26,9 +29,9 @@ const AddReplica = () => {
   }
 
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -44,21 +47,26 @@ const AddReplica = () => {
       })
     },
     onError: (error: AxiosError) => {
-      console.log(error)
-      // toast.error(`${error?.response?.data?.message || "Failed to add replica"}`)
-    }
+      // console.log(error)
+      toast.error(
+        `${error?.response?.data?.message || "Failed to add replica"}`
+      )
+    },
   })
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 max-w-md mx-auto">
       <h2 className="text-lg font-medium mb-3">Add Replica</h2>
-      <form className="space-y-3" onSubmit={(e) => {
-        e.preventDefault();
-        if (validate(formData.url) !== "success") {
-          return
-        }
-        mutate()
-      }}>
+      <form
+        className="space-y-3"
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (validate(formData.url) !== "success") {
+            return
+          }
+          mutate()
+        }}
+      >
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Replica Name
@@ -109,7 +117,7 @@ const AddReplica = () => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default AddReplica;
+export default AddReplica
